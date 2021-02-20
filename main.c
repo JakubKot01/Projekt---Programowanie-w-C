@@ -7,51 +7,78 @@
 
 #include "frequencies.h"
 #include "wavfile.h"
-
-const int NUM_OF_SAMPLES = (WAVFILE_SAMPLES_PER_SECOND*2);
+#include "functions.h"
 
 int main()
 {
-    short waveform[NUM_OF_SAMPLES];
-    printf("[1]Wprowadzanie ręczne\n[2]schodki\t(TODO)\n[3]wyjdź");
-    int c, length, volume;
-    double frequency;
-    scanf("%d", &c);
-    if(c==1)
+    int volume1, length;
+    double frequency1;
+    int command;
+    short merged[NUMBER_OF_SAMPLES], random[NUMBER_OF_SAMPLES];
+    do
     {
-        printf("częstotliwość: ");
-        scanf("%lf", &frequency);
-        printf("głośność: ");
-        scanf("%d", &volume);
-        int l = NUM_OF_SAMPLES;
-        for(int i=0;i<l;i++)
+        printf("[1]waveform\n[2]op_add\n[3]op_filter\n[4]noise\n[5]exit\n");
+        scanf("%d", &command);
+        if(command == 1)
         {
-            double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
-            waveform[i] = volume*sin(frequency*t*2*M_PI);
+            char x[14];
+            printf("nazwa pliku: ");
+            scanf("%s", x);
+            strcat(x, ".wav");
+            printf("%s\n", x);
+            printf("częstotliwość: ");
+            scanf("%lf", &frequency1);
+            printf("%lf\n", frequency1);
+            printf("głośność: ");
+            scanf("%d", &volume1);
+            printf("%d\n", volume1);
+            length = NUMBER_OF_SAMPLES;
+            waveform_create(x, volume1, frequency1, length);
+            printf("utworzono plik o nazwie: %s\n", x);
         }
-        length=l;
-	}
-	if(c==2)
-    {
-        int volume = 32000;
-        double f[8]={261.9, 293.7, 329.6, 349.2, 392.0, 440.0, 493.9, 523.3};
-        int l = NUM_OF_SAMPLES*8;
-        for(int i=0;i<l;i++)
+        if(command == 2)
         {
-            double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
-            waveform[i] = volume*sin(f[i]*t*2*M_PI);
+            char y[14];
+            printf("nazwa pliku: ");
+            scanf("%s", y);
+            strcat(y, ".wav");
+            printf("%s\n", y);
+            int volume2;
+            double frequency2;
+            printf("częstotliwość: ");
+            scanf("%lf", &frequency2);
+            printf("%lf\n", frequency2);
+            printf("głośność: ");
+            scanf("%d", &volume2);
+            printf("%d\n", volume2);
+            wavfile_add(merged, y, length, volume1, volume2, frequency1, frequency2);
         }
-    length=l;
-    }
-    if(c==3) return 0;
-    FILE * f = wavfile_open("fst.wav");
-	if(!f)
-	{
-		printf("error: %s",strerror(errno));
-		return 1;
-	}
-	wavfile_write(f,waveform,length);
-	wavfile_close(f);
-	wavfile_add(waveform, f, length, volume, frequency);
+        if(command == 3)
+        {
+            printf("częstotliwość: ");
+            scanf("%lf", &frequency1);
+            printf("%lf\n", frequency1);
+            printf("głośność: ");
+            scanf("%d", &volume1);
+            printf("%d\n", volume1);
+            length = NUMBER_OF_SAMPLES;
+            noise(random, merged, length);
+        }
+        if(command == 4)
+        {
+
+            char z[14];
+            printf("nazwa pliku: ");
+            scanf("%s", z);
+            strcat(z, ".wav");
+            printf("%s\n", z);
+            int range;
+            printf("promień: ");
+            scanf("%d", &range);
+            printf("%d\n", range);
+            length = NUMBER_OF_SAMPLES;
+            blur(z, random, range, length);
+        }
+    }while(command!=5);
 	return 0;
 }

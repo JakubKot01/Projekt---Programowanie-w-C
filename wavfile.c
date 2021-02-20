@@ -5,8 +5,6 @@
 #include <math.h>
 #include "wavfile.h"
 
-const int NUMBER_OF_SAMPLES = (WAVFILE_SAMPLES_PER_SECOND*2);
-
 struct wavfile_header {
 	char	riff_tag[4];
 	int	riff_length;
@@ -74,43 +72,4 @@ void wavfile_close( FILE *file )
 	fwrite(&riff_length,sizeof(riff_length),1,file);
 
 	fclose(file);
-}
-int wavfile_add(short data[], FILE * file,int length, int vol, int freq)
-{
-    int norm;
-    short newdata[NUMBER_OF_SAMPLES],new_waveform[NUMBER_OF_SAMPLES];
-    printf("Dodawanie dźwięków...\n");
-    printf("częstotliwość: \n");
-    double frequency2;
-    scanf("%lf", &frequency2);
-    printf("głośność: \n");
-    int volume2;
-    scanf("%d", &volume2);
-    for(int i=0;i<length;i++)
-    {
-        double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
-        newdata[i] = volume2*sin(frequency2*t*2*M_PI);
-    }
-    norm = ((vol + volume2)/vol);
-    FILE * g = wavfile_open("snd.wav");
-	if(!g)
-	{
-		printf("error: %s",strerror(errno));
-		return 1;
-	}
-	wavfile_write(g,newdata,length);
-	wavfile_close(g);
-    for(int i=0;i<length;i++)
-    {
-        double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
-        new_waveform[i] = (data[i] + newdata[i])/norm;
-    }
-    FILE * f = wavfile_open("merged.wav");
-	if(!f)
-	{
-		printf("error: %s",strerror(errno));
-		return 1;
-	}
-	wavfile_write(f,new_waveform,length);
-	wavfile_close(f);
 }
