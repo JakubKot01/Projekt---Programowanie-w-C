@@ -75,8 +75,9 @@ void wavfile_close( FILE *file )
 
 	fclose(file);
 }
-int wavfile_add(short data[], FILE * file,int length)
+int wavfile_add(short data[], FILE * file,int length, int vol, int freq)
 {
+    int norm;
     short newdata[NUMBER_OF_SAMPLES],new_waveform[NUMBER_OF_SAMPLES];
     printf("Dodawanie dźwięków...\n");
     printf("częstotliwość: \n");
@@ -90,7 +91,8 @@ int wavfile_add(short data[], FILE * file,int length)
         double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
         newdata[i] = volume2*sin(frequency2*t*2*M_PI);
     }
-    FILE * g = wavfile_open("sound2.wav");
+    norm = ((vol + volume2)/vol);
+    FILE * g = wavfile_open("snd.wav");
 	if(!g)
 	{
 		printf("error: %s",strerror(errno));
@@ -101,9 +103,9 @@ int wavfile_add(short data[], FILE * file,int length)
     for(int i=0;i<length;i++)
     {
         double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
-        new_waveform[i] = data[i] + newdata[i];
+        new_waveform[i] = (data[i] + newdata[i])/norm;
     }
-    FILE * f = wavfile_open("sound_added.wav");
+    FILE * f = wavfile_open("merged.wav");
 	if(!f)
 	{
 		printf("error: %s",strerror(errno));

@@ -14,12 +14,11 @@ int main()
 {
     short waveform[NUM_OF_SAMPLES];
     printf("[1]Wprowadzanie ręczne\n[2]schodki\t(TODO)\n[3]wyjdź");
-    int c, length;
+    int c, length, volume;
+    double frequency;
     scanf("%d", &c);
     if(c==1)
     {
-        double frequency;
-        int volume;
         printf("częstotliwość: ");
         scanf("%lf", &frequency);
         printf("głośność: ");
@@ -45,7 +44,7 @@ int main()
     length=l;
     }
     if(c==3) return 0;
-    FILE * f = wavfile_open("sound1.wav");
+    FILE * f = wavfile_open("fst.wav");
 	if(!f)
 	{
 		printf("error: %s",strerror(errno));
@@ -53,6 +52,6 @@ int main()
 	}
 	wavfile_write(f,waveform,length);
 	wavfile_close(f);
-	wavfile_add(waveform, f, length);
+	wavfile_add(waveform, f, length, volume, frequency);
 	return 0;
 }

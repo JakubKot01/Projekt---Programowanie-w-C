@@ -7,6 +7,6 @@ gcc main.c wavefile.c -o test -lm
 ./test
 ```
 ## pliki:
-```sound1.wav``` - pierwszy .wav<br>
-```sound2.wav``` - drugi .wav<br>
-```sound_added.wav``` - połączone dwie fale (nie działa)<br>
+```fst.wav``` - pierwszy .wav<br>
+```snd.wav``` - drugi .wav<br>
+```merged.wav``` - połączone dwie fale (nie działa)<br>
