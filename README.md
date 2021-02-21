@@ -1,6 +1,7 @@
 # Projekt - Wavfiles
-* nie działa łączenie dźwięków (fal?)
-* Usunięte wczytywanie z pliku
+* łączenie fal
+* dodawanie szumów (random_noise)
+* usuwanie szumów
 ## Jak działa?
 ```
 gcc main.c functions.c wavefile.c -o test -lm
