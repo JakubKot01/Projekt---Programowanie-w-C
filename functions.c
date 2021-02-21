@@ -9,14 +9,14 @@
 #include "frequencies.h"
 #include "functions.h"
 
-int arytm(int range, short waveform[], int i)
+int arytm(int range, short waveform[], int i, int length)
 {
-    int s=0;
+    int s=0,p;
     for(int n=(i-range);n<(i+range);n++)
     {
-        s=s+waveform[n];
+        s=s+waveform[(n<0)? (length+n) : (n%length)];
     }
-    s=s/range;
+    s=s/(1+(2*range));
     return s;
 }
 int waveform_create(const char *filename, int vol, double freq, int length)
@@ -93,7 +93,7 @@ int blur(const char *filename, short waveform[], int range, int length)
     }
     for(int i=0;i<length;i++)
     {
-        blur[i] = arytm(range, copy, i);
+        blur[i] = arytm(range, copy, i, length);
     }
     FILE * f = wavfile_open(filename);
 	if(!f)
